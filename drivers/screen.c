@@ -111,11 +111,16 @@ void print(char *message)
     print_at(message, -1, -1);
 }
 
-void print_backspace() {
+void handle_backspace() {
     int offset = get_cursor()-2;
     int row = get_offset_row(offset);
     int col = get_offset_col(offset);
-    print_char(0x08, col, row, WHITE_ON_BLACK);
+
+    //only allow deletion to beginning of line 
+    if(col >= 1){
+        print_char(' ', col, row, WHITE_ON_BLACK);
+        set_cursor(offset);
+    }
 }
 
 void clear_screen()

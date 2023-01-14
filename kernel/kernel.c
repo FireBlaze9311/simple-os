@@ -13,13 +13,14 @@ void main(){
 
     init_keyboard();
 
-    print("\n");
+    print("\n\nWillkommen! \n");
+
     print("> ");
 
 }
 
 void user_input(char *input) {
-    if (strcmp(input, "END") == 0) {
+    if (strcmp(input, "EXIT") == 0) {
         print("Stopping. Bye!\n");
         asm volatile("hlt");
     }

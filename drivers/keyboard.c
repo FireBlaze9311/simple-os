@@ -34,7 +34,7 @@ static void keyboard_callback(registers_t regs) {
 
     if (scancode == BACKSPACE) {
         backspace(key_buffer);
-        print_backspace();
+        handle_backspace();
     } else if (scancode == ENTER) {
         print("\n");
         user_input(key_buffer); /* kernel-controlled function */
