@@ -1,13 +1,31 @@
 #include "../drivers/screen.h"
-#include "util.h"
 #include "../cpu/isr.h"
+#include "../cpu/timer.h"
+#include "../libc/string.h"
 
 void main(){
     isr_install();
-    /* Test the interrupts */
-    __asm__ __volatile__("int $2");
-    __asm__ __volatile__("int $3");
+    irq_install();
 
+    // Set Interrupt Flag
+    asm volatile("sti");
+    //init_timer(50);
 
-    print("hello");
+    init_keyboard();
+
+    print("\n");
+    print("> ");
+
+}
+
+void user_input(char *input) {
+    if (strcmp(input, "END") == 0) {
+        print("Stopping. Bye!\n");
+        asm volatile("hlt");
+    }
+    if(strcmp(input, "CLEAR") == 0){
+        clear_screen();
+    }
+    print(input);
+    print("\n> ");
 }

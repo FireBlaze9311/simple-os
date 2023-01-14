@@ -1,18 +1,13 @@
-#define VIDEO_ADDRESS 0xb8000
-#define MAX_ROWS 25
-#define MAX_COLS 80
-
-
-#define REG_SCREEN_CTRL 0x3d4
-#define REG_SCREEN_DATA 0x3d5
-
 #include "ports.h"
 #include "screen.h"
-#include "../kernel/util.h"
+#include "../libc/mem.h"
 
 void set_cursor(int offset);
 int get_screen_offset();
 int get_cursor();
+int get_offset_row(int offset);
+int get_offset_col(int offset);
+
 void print_char(char character, int col, int row, char attribute_byte);
 
 int handle_scrolling(int cursor_offset)
@@ -116,6 +111,13 @@ void print(char *message)
     print_at(message, -1, -1);
 }
 
+void print_backspace() {
+    int offset = get_cursor()-2;
+    int row = get_offset_row(offset);
+    int col = get_offset_col(offset);
+    print_char(0x08, col, row, WHITE_ON_BLACK);
+}
+
 void clear_screen()
 {
     int row = 0;
@@ -131,3 +133,6 @@ void clear_screen()
 
     set_cursor(get_screen_offset(0, 0));
 }
+
+int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
+int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
