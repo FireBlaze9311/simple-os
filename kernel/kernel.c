@@ -2,6 +2,7 @@
 #include "../cpu/isr.h"
 #include "../cpu/timer.h"
 #include "../libc/string.h"
+#include "../libc/mem.h"
 
 void main(){
     isr_install();
@@ -16,17 +17,22 @@ void main(){
     print("\n\nWillkommen! \n");
 
     print("> ");
-
 }
 
-void user_input(char *input) {
+void execute_command(char *input) {
     if (strcmp(input, "EXIT") == 0) {
         print("Stopping. Bye!\n");
         asm volatile("hlt");
     }
-    if(strcmp(input, "CLEAR") == 0){
+    else if(strcmp(input, "CLEAR") == 0){
         clear_screen();
     }
-    print(input);
+    else if(strcmp(input, "HELP") == 0){
+        print("Supported Commands: \n EXIT - Exit OS\n CLEAR - Clear Screen");
+    }
+    else{
+        print("Unknown Command: ");
+        print(input);
+    }
     print("\n> ");
 }
